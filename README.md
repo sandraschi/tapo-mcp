@@ -1,86 +1,61 @@
-# Tapo MCP
+# tapo-mcp
 
-MCP server for TP-Link Tapo cameras and smart plugs.
+MCP server for TP-Link Tapo cameras and smart plugs. Control PTZ, take snapshots, toggle privacy mode, and monitor plug energy — all through MCP tools and a React dashboard.
 
-**Features:**
-- Tapo smart plugs (P110/P115): power on/off, energy monitoring, 24h time-series
-- Tapo cameras (C100/C200/C210/etc.): snapshot, PTZ, privacy mode, LED, stream URL
-- SQLite time-series for plug energy data
-- React webapp with recharts energy trends
+[![FastMCP](https://img.shields.io/badge/FastMCP-3.4-7c5cfc?style=flat-square)](https://github.com/jlowin/fastmcp)
+[![Python](https://img.shields.io/badge/python-3.12+-blue?style=flat-square&logo=python)](https://python.org)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
-## Quick Start
+## Preview
+
+| Dashboard | Camera controls | Energy trends |
+|-----------|----------------|---------------|
+| KPI cards for backend, cameras, plugs | Snapshot preview, PTZ, privacy/LED toggles | recharts AreaChart per plug (12h-168h) |
+
+## Features
+
+- **Camera control**: Snapshot, PTZ (up/down/left/right), privacy mode, LED, stream URL
+- **Smart plug monitoring**: Power on/off, current power (W), daily energy (kWh), voltage
+- **Energy time-series**: SQLite-backed history with recharts AreaChart (12h/24h/72h/168h)
+- **REST API**: Full `/api/plugs/*` and `/api/cameras/*` endpoints
+- **Dark-theme webapp**: React + Vite + TailwindCSS dashboard
+
+## Quick Install
 
 ```powershell
 git clone https://github.com/sandraschi/tapo-mcp
 cd tapo-mcp
-cp .env.example .env
+uv sync
 .\start.ps1
 ```
 
-Backend on `http://127.0.0.1:11102`, frontend on `http://127.0.0.1:11103`.
+Then open `http://127.0.0.1:11103`.
 
-## Configuration
+## What You Can Do
 
-Set in `.env` or via the webapp Settings page:
-
-| Variable | For | Description |
-|----------|-----|-------------|
-| `TAPO_CLOUD_EMAIL` | Plugs | Tapo cloud account email |
-| `TAPO_CLOUD_PASSWORD` | Plugs | Tapo cloud account password |
-| `TAPO_CAMERA_HOST` | Cameras | Camera IP address |
-| `TAPO_CAMERA_USERNAME` | Cameras | Camera username (default: admin) |
-| `TAPO_CAMERA_PASSWORD` | Cameras | Camera password |
-
-## Usage
-
-```python
-# List smart plugs
-tapo_plug(operation="list")
-
-# Toggle a plug
-tapo_plug(operation="toggle", device_id="xxxx", state=True)
-
-# Get camera snapshot (returns base64 JPEG)
-tapo_camera(operation="snapshot", camera_id="tapo_192_168_1_100")
-
-# PTZ move
-tapo_camera(operation="ptz", camera_id="tapo_192_168_1_100", direction="right")
+```
+"List my Tapo smart plugs and show current power"
+"Take a snapshot from the kitchen camera"
+"Turn on the living room plug"
+"Show energy usage for the server plug over the last 24 hours"
 ```
 
-## Ports
+## Documentation
 
-| Port | Service |
-|------|---------|
-| 11102 | Backend (FastAPI + MCP HTTP) |
-| 11103 | Frontend (Vite dev) |
+| Doc | Contents |
+|-----|----------|
+| [Installation](INSTALL.md) | All install methods, prerequisites |
+| [Configuration](docs/CONFIGURATION.md) | Env vars, config options |
+| [Tool Reference](docs/TOOLS.md) | All available MCP tools |
+| [Development](docs/DEVELOPMENT.md) | Contributing, local setup |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues |
 
-## Stack
+## Requirements
 
-- **Backend**: Python 3.12+, FastMCP 3.4+, FastAPI, pytapo, tapo
-- **Frontend**: React 19, Vite 7, TailwindCSS 3, recharts
-- **Storage**: SQLite (plug energy time-series)
+- Python 3.12+
+- Tapo cloud account (for smart plugs) or local camera credentials
+- TP-Link Tapo camera (C100/C200/C210/etc.) or smart plug (P110/P115)
 
-## Dependencies
+## License
 
-Drivers are core deps — `tapo` and `pytapo` are installed by default on `uv sync`.
-
-## MCP Client Config
-
-```json
-{
-  "mcpServers": {
-    "tapo-mcp": {
-      "command": "uv",
-      "args": ["--directory", "D:/Dev/repos/tapo-mcp", "run", "tapo-mcp"]
-    }
-  }
-}
-```
-
-## Webapp Pages
-
-- **Dashboard**: Camera/plug counts, backend status
-- **Cameras**: Snapshot grid, PTZ controls, privacy/LED toggles
-- **Plugs**: Power on/off, current power, daily energy, voltage
-- **Trends**: recharts AreaChart per plug (12h/24h/72h/168h)
-- **Settings**: Tapo cloud credentials
+MIT
