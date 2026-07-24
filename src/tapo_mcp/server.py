@@ -12,34 +12,73 @@ from .transport import run_server
 
 logger = structlog.get_logger(__name__)
 
+_READ_ONLY = {"readonly": True}
+_MUTATING = {}
+
 
 def create_server() -> FastMCP:
     server = FastMCP(name="tapo-mcp", version="0.1.0")
 
-    # Lazy managers
+    # -- Lifespan --
     _plug_mgr = None
     _camera_mgr = None
 
+    @server.lifespan()
+    async def lifespan(server: FastMCP):
+        logger.info("Starting tapo-mcp")
+        nonlocal _plug_mgr, _camera_mgr
+        from .devices.camera import CameraManager
+        from .devices.plug import PlugManager
+
+        email = os.getenv("TAPO_CLOUD_EMAIL", "")
+        password = os.getenv("TAPO_CLOUD_PASSWORD", "")
+        if email and password:
+            _plug_mgr = PlugManager(email, password)
+        _camera_mgr = CameraManager()
+        _camera_mgr.register_from_env()
+        yield
+        logger.info("Shutting down tapo-mcp")
+
     def _get_plug_mgr():
         nonlocal _plug_mgr
-        if _plug_mgr is None:
-            from .devices.plug import PlugManager
-
-            email = os.getenv("TAPO_CLOUD_EMAIL", "")
-            password = os.getenv("TAPO_CLOUD_PASSWORD", "")
-            _plug_mgr = PlugManager(email, password)
         return _plug_mgr
 
     def _get_camera_mgr():
         nonlocal _camera_mgr
-        if _camera_mgr is None:
-            from .devices.camera import CameraManager
-
-            _camera_mgr = CameraManager()
-            _camera_mgr.register_from_env()
         return _camera_mgr
 
-    @server.tool()
+    # -- Prompts --
+    @server.prompt()
+    def tapo_help(topic: str = "") -> str:
+        """Get help for Tapo MCP tools."""
+        if topic == "plugs":
+            return (
+                "Tapo smart plugs: use `tapo_plug` with operation=list to discover, "
+                "operation=status for current power/energy, operation=toggle to switch, "
+                "operation=energy_history for time-series data."
+            )
+        if topic == "cameras":
+            return (
+                "Tapo cameras: use `tapo_camera` with operation=list to see registered cams, "
+                "operation=snapshot for an image, operation=ptz to pan/tilt, "
+                "operation=privacy_mode or led to toggle settings."
+            )
+        return (
+            "Tapo MCP manages TP-Link Tapo cameras and smart plugs. "
+            "Use `tapo_plug` for plugs, `tapo_camera` for cameras."
+        )
+
+    # -- Resources --
+    @server.resource("tapo://info")
+    def tapo_info() -> str:
+        """Server info and configuration status."""
+        has_plugs = _get_plug_mgr() is not None
+        cams = _get_camera_mgr().get_cameras() if _get_camera_mgr() else []
+        return f"Tapo MCP v0.1.0 | Plugs configured: {has_plugs} | Cameras: {len(cams)}"
+
+    # -- Tools --
+
+    @server.tool(annotations=_READ_ONLY)
     async def tapo_plug(
         operation: Annotated[str, Field(description="list, status, toggle, energy_history")],
         device_id: Annotated[str | None, Field(description="Device ID (required for specific ops)")] = None,
@@ -48,13 +87,12 @@ def create_server() -> FastMCP:
     ) -> dict:
         """Control TP-Link Tapo smart plugs.
 
-        PORTMANTEAU RATIONALE: Single entry point for all plug operations —
-        discovery, status, power toggle, and energy history.
-
         ## Return Format
         {"success": bool, "message": str, "data": {...}}
         """
         mgr = _get_plug_mgr()
+        if mgr is None:
+            return {"success": False, "error": "Tapo cloud credentials not configured"}
         try:
             if operation == "list":
                 devices = await mgr.discover()
@@ -75,22 +113,21 @@ def create_server() -> FastMCP:
         except PlugError as e:
             return {"success": False, "error": str(e), "error_type": e.error_type}
 
-    @server.tool()
+    @server.tool(annotations=_READ_ONLY)
     async def tapo_camera(
         operation: Annotated[str, Field(description="list, status, snapshot, ptz, privacy_mode, led, stream")],
         camera_id: Annotated[str | None, Field(description="Camera ID (required for specific ops)")] = None,
-        direction: Annotated[str | None, Field(description="PTZ direction: up, down, left, right")] = None,
+        direction: Annotated[str | None, Field(description="PTZ direction: up/down/left/right")] = None,
         enabled: Annotated[bool | None, Field(description="Toggle state for privacy_mode/led")] = None,
     ) -> dict:
         """Control TP-Link Tapo cameras.
-
-        PORTMANTEAU RATIONALE: Single entry point for all camera operations —
-        discovery, status, snapshot, PTZ, privacy mode, LED control, stream URL.
 
         ## Return Format
         {"success": bool, "message": str, "data": {...}}
         """
         mgr = _get_camera_mgr()
+        if mgr is None:
+            return {"success": False, "error": "Camera manager not initialized"}
         try:
             if operation == "list":
                 cams = mgr.get_cameras()
@@ -124,10 +161,10 @@ def create_server() -> FastMCP:
         except CameraError as e:
             return {"success": False, "error": str(e), "error_type": e.error_type}
 
-    @server.tool()
+    @server.tool(annotations=_MUTATING)
     async def tapo_register_camera(
         host: Annotated[str, Field(description="Camera IP or hostname")],
-        username: Annotated[str, Field(description="Camera username (default: admin)")] = "admin",
+        username: Annotated[str, Field(description="Camera username")] = "admin",
         password: Annotated[str, Field(description="Camera password")] = "",
         name: Annotated[str | None, Field(description="Friendly name")] = None,
     ) -> dict:
@@ -137,6 +174,8 @@ def create_server() -> FastMCP:
         {"success": bool, "camera_id": str}
         """
         mgr = _get_camera_mgr()
+        if mgr is None:
+            return {"success": False, "error": "Camera manager not initialized"}
         try:
             mgr._register(host, username, password)
             cid = f"tapo_{host.replace('.', '_')}"

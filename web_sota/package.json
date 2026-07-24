@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^11.0.0",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -16,7 +17,8 @@
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.4.0",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1"
+    "clsx": "^2.1.1",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

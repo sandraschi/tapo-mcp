@@ -5,17 +5,23 @@ default:
 
 lint:
     uv run ruff check src/
-    Set-Location web_sota; npx tsc --noEmit
+    Set-Location web_sota; bun run tsc --noEmit
 
 fix:
-    uv run ruff check src/ --fix
+    uv run ruff check src/ --fix --unsafe-fixes
+    uv run ruff format src/
+
+fmt:
     uv run ruff format src/
 
 serve:
-    uv run python -m tapo_mcp.server --http --port 11102
+    uv run python -m tapo_mcp.server
 
 serve-web:
-    Set-Location web_sota; Start-Process npx -ArgumentList "vite --port 11103"
+    Set-Location web_sota; bun run dev --port 11103
+
+build-web:
+    Set-Location web_sota; bun run build
 
 test:
     uv run pytest tests/ -q
