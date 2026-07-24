@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tapo-mcp"
+version = "0.1.0"
+description = "MCP server for TP-Link Tapo cameras and smart plugs"
+authors = [{name = "Sandra", email = "sandraschipal@gmail.com"}]
+requires-python = ">=3.12"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Home Automation",
+]
+keywords = ["tapo", "tplink", "camera", "smart-plug", "mcp", "fastmcp"]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "fastmcp>=3.4.4,<4",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "structlog>=23.1.0",
+    "tenacity>=8.2.0",
+    "prefab-ui>=0.14.0",
+    "tapo>=0.9.0",
+    "pytapo>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.15.0", "pytest>=7.4.0", "pytest-asyncio>=0.21.0"]
+
+[project.scripts]
+tapo-mcp = "tapo_mcp.server:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "S", "UP", "RUF"]
+ignore = ["S101", "B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

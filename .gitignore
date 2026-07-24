@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+*.mcpb
+dist/
+data/
+node_modules/
+web_sota/dist/
+native/target/
+native/gen/
+native/resources/*.exe
+native/binaries/*.exe
+*.bak

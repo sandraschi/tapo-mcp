@@ -1,0 +1,66 @@
+# tapo-mcp — Full Reference
+
+## Overview
+
+FastMCP 3.4+ server for TP-Link Tapo devices: cameras (PTZ, snapshot, streaming)
+and smart plugs (power toggle, energy monitoring). SQLite time-series for plug data.
+
+### Architecture
+
+```
+MCP Client -> FastMCP Server -> pytapo / tapo lib -> Tapo cloud API / LAN
+                 |
+            FastAPI (web_app.py)
+           /              \
+     SQLite (plugs)     Vite React SPA
+```
+
+### Dependencies
+
+Drivers are core deps: `tapo` (smart plugs) + `pytapo` (cameras) installed on `uv sync`.
+
+### Storage
+
+Plug energy data in SQLite (`data/timeseries.db`). Camera state is ephemeral.
+
+### Env vars
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `TAPO_CLOUD_EMAIL` | Plugs | — | Tapo cloud account email |
+| `TAPO_CLOUD_PASSWORD` | Plugs | — | Tapo cloud account password |
+| `TAPO_CAMERA_HOST` | Cameras | — | Camera IP/hostname |
+| `TAPO_CAMERA_USERNAME` | No | admin | Camera username |
+| `TAPO_CAMERA_PASSWORD` | Cameras | — | Camera password |
+
+## Tools
+
+### tapo_plug
+
+Operations: list, status, toggle, energy_history
+
+### tapo_camera
+
+Operations: list, status, snapshot, ptz, privacy_mode, led, stream
+
+### tapo_register_camera
+
+Register a camera by host/username/password.
+
+## REST API
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/health | Health check |
+| GET | /api/v1/diagnostics | Diagnostics (CUA gate) |
+| GET | /api/plugs | List plugs |
+| GET | /api/plugs/{id} | Plug details + current power |
+| POST | /api/plugs/{id}/toggle | Power on/off |
+| GET | /api/plugs/{id}/history | Energy time-series |
+| GET | /api/cameras | List cameras |
+| GET | /api/cameras/{id} | Camera status |
+| GET | /api/cameras/{id}/snapshot | JPEG snapshot |
+| POST | /api/cameras/{id}/ptz | PTZ move |
+| POST | /api/cameras/{id}/privacy_mode | Toggle privacy |
+| POST | /api/cameras/{id}/led | Toggle LED |
+| GET | /api/cameras/{id}/stream | Stream URL |

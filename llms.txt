@@ -1,0 +1,27 @@
+# tapo-mcp
+
+> MCP server for TP-Link Tapo cameras and smart plugs.
+
+## Key Links
+
+- [llms-full.txt](llms-full.txt) — Full reference
+
+## Quick Start
+
+```powershell
+cp .env.example .env
+.\start.ps1
+```
+
+## Tools
+
+- `tapo_plug` — List, status, toggle, energy_history
+- `tapo_camera` — List, status, snapshot, ptz, privacy_mode, led, stream
+- `tapo_register_camera` — Register a camera by host/password
+
+## Ports
+
+| Service | Port |
+|---------|------|
+| Backend | 11102 |
+| Frontend | 11103 |

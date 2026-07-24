@@ -1,0 +1,11 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/2025/S-1.json",
+  "name": "tapo-mcp",
+  "displayName": "Tapo MCP",
+  "description": "MCP server for TP-Link Tapo cameras and smart plugs.",
+  "categories": ["IoT", "Home Automation", "Camera"],
+  "tags": ["tapo", "tplink", "camera", "smart-plug", "energy"],
+  "publisher": "sandraschi",
+  "homepage": "https://github.com/sandraschi/tapo-mcp",
+  "capabilities": { "tools": {} }
+}
