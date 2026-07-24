@@ -48,12 +48,12 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="dashboard">
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-white">Dashboard</h2>
         <p className="text-zinc-400">Tapo device overview</p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3" data-testid="kpi-grid">
         {cards.map((c) => (
           <div
             key={c.title}
@@ -61,7 +61,7 @@ export function Dashboard() {
               "rounded-lg border border-zinc-800 p-5",
               c.bg,
             )}
-          >
+            data-testid={`kpi-${c.title.toLowerCase()}`}>
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-zinc-400">{c.title}</span>
               <c.icon className={cn("h-5 w-5", c.color)} />
@@ -72,7 +72,7 @@ export function Dashboard() {
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-2 text-sm text-zinc-500">
+      <div className="flex items-center gap-2 text-sm text-zinc-500" data-testid="backend-status">
         <Wifi className="h-4 w-4" />
         {health ? "Connected to backend" : health === null ? "Connecting..." : "Offline"}
       </div>
