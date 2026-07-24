@@ -11,6 +11,7 @@ import {
   Code2,
   HelpCircle,
   Terminal,
+  MessageSquare,
   Wifi,
   WifiOff,
 } from "lucide-react";
@@ -21,6 +22,7 @@ import { Trends } from "./pages/trends";
 import { SettingsPage } from "./pages/settings";
 import { ToolsPage } from "./pages/tools";
 import { ApiDocsPage } from "./pages/api-docs";
+import { Chat } from "./pages/chat";
 import { HelpModal } from "./components/HelpModal";
 import { ToastContainer } from "./components/ToastContainer";
 import { useToast } from "./common/use-toast";
@@ -31,6 +33,7 @@ const NAV = [
   { href: "/cameras", label: "Cameras", icon: Camera },
   { href: "/plugs", label: "Plugs", icon: Zap },
   { href: "/trends", label: "Trends", icon: Activity },
+  { href: "/chat", label: "Chat", icon: MessageSquare },
   { href: "/tools", label: "Tools", icon: Code2 },
   { href: "/api-docs", label: "API Docs", icon: Terminal },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -176,6 +179,7 @@ export default function App() {
             <Route path="/cameras" element={<Cameras />} />
             <Route path="/plugs" element={<Plugs />} />
             <Route path="/trends" element={<Trends />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/tools" element={<ToolsPage />} />
             <Route path="/api-docs" element={<ApiDocsPage />} />
             <Route path="/settings" element={<SettingsPage />} />

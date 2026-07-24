@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
-import { LayoutDashboard, Camera, Zap, Activity, Settings, ChevronLeft, ChevronRight, Code2, HelpCircle, Terminal, Wifi, WifiOff, } from "lucide-react";
+import { LayoutDashboard, Camera, Zap, Activity, Settings, ChevronLeft, ChevronRight, Code2, HelpCircle, Terminal, MessageSquare, Wifi, WifiOff, } from "lucide-react";
 import { Dashboard } from "./pages/dashboard";
 import { Cameras } from "./pages/cameras";
 import { Plugs } from "./pages/plugs";
@@ -9,6 +9,7 @@ import { Trends } from "./pages/trends";
 import { SettingsPage } from "./pages/settings";
 import { ToolsPage } from "./pages/tools";
 import { ApiDocsPage } from "./pages/api-docs";
+import { Chat } from "./pages/chat";
 import { HelpModal } from "./components/HelpModal";
 import { ToastContainer } from "./components/ToastContainer";
 import { useToast } from "./common/use-toast";
@@ -18,6 +19,7 @@ const NAV = [
     { href: "/cameras", label: "Cameras", icon: Camera },
     { href: "/plugs", label: "Plugs", icon: Zap },
     { href: "/trends", label: "Trends", icon: Activity },
+    { href: "/chat", label: "Chat", icon: MessageSquare },
     { href: "/tools", label: "Tools", icon: Code2 },
     { href: "/api-docs", label: "API Docs", icon: Terminal },
     { href: "/settings", label: "Settings", icon: Settings },
@@ -51,5 +53,5 @@ export default function App() {
                                             ? "bg-zinc-800 text-zinc-500"
                                             : backendOk
                                                 ? "bg-emerald-950/50 text-emerald-400"
-                                                : "bg-red-950/50 text-red-400"), children: [backendOk === null ? (_jsx(Wifi, { className: "h-3 w-3" })) : backendOk ? (_jsx(Wifi, { className: "h-3 w-3" })) : (_jsx(WifiOff, { className: "h-3 w-3" })), _jsx("span", { className: "hidden sm:inline", children: backendOk === null ? "..." : backendOk ? "API" : "Offline" })] })] })] }), _jsx("main", { className: "flex-1 overflow-y-auto p-6", children: _jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(Dashboard, {}) }), _jsx(Route, { path: "/cameras", element: _jsx(Cameras, {}) }), _jsx(Route, { path: "/plugs", element: _jsx(Plugs, {}) }), _jsx(Route, { path: "/trends", element: _jsx(Trends, {}) }), _jsx(Route, { path: "/tools", element: _jsx(ToolsPage, {}) }), _jsx(Route, { path: "/api-docs", element: _jsx(ApiDocsPage, {}) }), _jsx(Route, { path: "/settings", element: _jsx(SettingsPage, {}) })] }) })] }), _jsx(HelpModal, { open: helpOpen, onClose: () => setHelpOpen(false) }), _jsx(ToastContainer, { toasts: toasts, onRemove: removeToast })] }));
+                                                : "bg-red-950/50 text-red-400"), children: [backendOk === null ? (_jsx(Wifi, { className: "h-3 w-3" })) : backendOk ? (_jsx(Wifi, { className: "h-3 w-3" })) : (_jsx(WifiOff, { className: "h-3 w-3" })), _jsx("span", { className: "hidden sm:inline", children: backendOk === null ? "..." : backendOk ? "API" : "Offline" })] })] })] }), _jsx("main", { className: "flex-1 overflow-y-auto p-6", children: _jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(Dashboard, {}) }), _jsx(Route, { path: "/cameras", element: _jsx(Cameras, {}) }), _jsx(Route, { path: "/plugs", element: _jsx(Plugs, {}) }), _jsx(Route, { path: "/trends", element: _jsx(Trends, {}) }), _jsx(Route, { path: "/chat", element: _jsx(Chat, {}) }), _jsx(Route, { path: "/tools", element: _jsx(ToolsPage, {}) }), _jsx(Route, { path: "/api-docs", element: _jsx(ApiDocsPage, {}) }), _jsx(Route, { path: "/settings", element: _jsx(SettingsPage, {}) })] }) })] }), _jsx(HelpModal, { open: helpOpen, onClose: () => setHelpOpen(false) }), _jsx(ToastContainer, { toasts: toasts, onRemove: removeToast })] }));
 }
