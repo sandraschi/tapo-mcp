@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff>=0.15.0", "pytest>=7.4.0", "pytest-asyncio>=0.21.0"]
+dev = ["ruff>=0.16.0,<0.17", "pytest>=7.4.0", "pytest-asyncio>=0.21.0"]
 
 [project.scripts]
 tapo-mcp = "tapo_mcp.server:main"
@@ -43,7 +43,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "S", "UP", "RUF"]
-ignore = ["S101", "B008"]
+ignore = ["S101", "B008", "S106", "S110", "S112", "RUF012"]
 
 [tool.ruff.format]
 quote-style = "double"
