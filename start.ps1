@@ -70,7 +70,7 @@ if (Test-Path (Join-Path $WebRoot "node_modules")) {
     Pop-Location
 }
 
-$null = Start-Process -NoNewWindow -FilePath "bun" -ArgumentList "run --bun vite --port $FrontendPort --host" -WorkingDirectory $WebRoot
+$null = Start-Process -NoNewWindow -FilePath "C:\Users\sandr\.bun\bin\bun.exe" -ArgumentList "run --bun vite --port $FrontendPort --host" -WorkingDirectory $WebRoot
 
 if (-not $NoBrowser) {
     Start-Sleep 3

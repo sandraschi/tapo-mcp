@@ -1956,7 +1956,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.0" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.16.0,<0.17" },
     { name = "structlog", specifier = ">=23.1.0" },
     { name = "tapo", specifier = ">=0.9.0" },
     { name = "tenacity", specifier = ">=8.2.0" },
